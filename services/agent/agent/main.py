@@ -1,5 +1,10 @@
 """FastAPI application — HTTP wrapper around the LangGraph agent."""
 
+import braintrust
+
+braintrust.auto_instrument()
+braintrust.init_logger(project="Verity")
+
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
@@ -15,13 +20,19 @@ from agent.schemas import (
     ReconcileResponse,
 )
 from agent.streaming import stream_chat_response
-from agent.tracing import configure_tracing, langchain_config, span_permalink, trace_run, tracing_enabled
+from agent.tracing import (
+    langchain_config,
+    mark_tracing_ready,
+    span_permalink,
+    trace_run,
+    tracing_enabled,
+)
+
+mark_tracing_ready()
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
-    """Initialize Braintrust tracing on startup."""
-    configure_tracing()
     yield
 
 

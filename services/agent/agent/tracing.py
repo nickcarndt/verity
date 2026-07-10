@@ -1,4 +1,4 @@
-"""Braintrust tracing setup for the Verity agent."""
+"""Braintrust tracing helpers for the Verity agent."""
 
 from __future__ import annotations
 
@@ -6,41 +6,17 @@ from collections.abc import AsyncIterator, Mapping
 from contextlib import asynccontextmanager
 from typing import Any
 
-from agent.config import Settings, get_settings
-
-_handler: Any | None = None
-_enabled: bool = False
+_enabled = False
 
 
-def configure_tracing(settings: Settings | None = None) -> bool:
-    """Initialize Braintrust logging and LangChain callback handler.
-
-    Returns True when tracing is active. Skips quietly when BRAINTRUST_API_KEY
-    is unset so local dev works without a Braintrust account.
-    """
-    global _handler, _enabled
-
-    cfg = settings or get_settings()
-    if not cfg.braintrust_api_key:
-        _enabled = False
-        _handler = None
-        return False
-
-    from braintrust import init_logger
-    from braintrust.integrations.langchain import BraintrustCallbackHandler, set_global_handler
-
-    init_logger(
-        project=cfg.braintrust_project,
-        api_key=cfg.braintrust_api_key,
-    )
-    _handler = BraintrustCallbackHandler()
-    set_global_handler(_handler)
+def mark_tracing_ready() -> None:
+    """Record that Braintrust auto-instrumentation bootstrap completed."""
+    global _enabled
     _enabled = True
-    return True
 
 
 def tracing_enabled() -> bool:
-    """Return whether Braintrust tracing is configured."""
+    """Return whether Braintrust tracing bootstrap ran."""
     return _enabled
 
 
@@ -56,13 +32,10 @@ def span_permalink(span: Any | None) -> str | None:
 
 
 def langchain_config(metadata: Mapping[str, Any] | None = None) -> dict[str, Any]:
-    """Build a LangGraph/LangChain config dict with tracing callbacks."""
-    config: dict[str, Any] = {}
-    if metadata:
-        config["metadata"] = dict(metadata)
-    if _handler is not None:
-        config["callbacks"] = [_handler]
-    return config
+    """Build a LangGraph config dict; LLM tracing is handled by auto-instrumentation."""
+    if not metadata:
+        return {}
+    return {"metadata": dict(metadata)}
 
 
 @asynccontextmanager

@@ -11,7 +11,7 @@ RUN pip install --no-cache-dir -e /app/packages/shared \
     && pip install --no-cache-dir \
         "fastapi>=0.115.0" "uvicorn[standard]>=0.32.0" \
         "langgraph>=0.2.0" "langchain-anthropic>=0.3.0" "langchain-core>=0.3.0" \
-        "pydantic>=2.0" "pydantic-settings>=2.0" "mcp>=1.28.0" "braintrust>=0.5.0" \
+        "pydantic>=2.0" "pydantic-settings>=2.0" "mcp>=1.28.0" "braintrust==0.26.0" \
     && pip install --no-cache-dir --no-deps -e /app/services/agent
 
 ENV VERITY_REPO_ROOT=/app

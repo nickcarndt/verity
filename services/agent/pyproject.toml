@@ -13,7 +13,7 @@ dependencies = [
     "pydantic-settings>=2.0",
     "mcp>=1.28.0",
     "verity-shared @ file:../../packages/shared",
-    "braintrust>=0.5.0",
+    "braintrust==0.26.0",
 ]
 
 [build-system]
