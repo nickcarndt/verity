@@ -1,0 +1,32 @@
+# Project: Verity — an autonomous invoice-reconciliation agent that grounds every exception in the source contract clause
+
+## How to work with me
+- Act as a senior engineer pair-programming with me and teaching as you go.
+- Before writing significant code, briefly explain WHAT you're building and WHY this approach over alternatives.
+- After writing code, explain any non-obvious lines. Define unfamiliar libraries/patterns in one sentence.
+- Keep explanations tight. I move fast but I understand everything before we proceed.
+- If I'm about to do something suboptimal, tell me.
+- Build in small phases. Do not build ahead of the current phase. Wait for me to confirm before moving on.
+
+## Stack (do not deviate without telling me why)
+- Agent orchestration: LangGraph (Python), exposed via FastAPI (HTTP service from day one)
+- Agent deploy target: Railway, Render, or Modal (separate from frontend)
+- MCP server: official Python MCP SDK, Streamable HTTP transport
+- Vector store: Postgres + pgvector
+- Evals + tracing: Braintrust
+- Frontend: Next.js (App Router) + Vercel AI SDK + shadcn/ui + Tailwind
+- Deploy target: Vercel
+- Language: Python for agent/MCP, TypeScript for frontend
+
+## Code standards
+- Type everything (Python type hints, TypeScript strict).
+- Validate all external inputs with schemas (pydantic for Python, zod for TS).
+- Treat all tool inputs as untrusted.
+- Write clear docstrings on functions.
+- No secrets in code — use environment variables.
+
+## Design standards (UI is first-class, not an afterthought)
+- The UI must look like a premium, production-grade fintech product — not a demo.
+- Use shadcn/ui components + Tailwind. Clean, modern, generous spacing, considered typography.
+- Design like a real dashboard: exception table, severity badges, dollar-impact emphasis, clickable trace drawers, smooth streaming states, thoughtful empty/loading states.
+- Aim for a UI that outshines a typical AI-wrapper side project. Polish matters.
