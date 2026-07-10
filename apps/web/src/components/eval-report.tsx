@@ -8,13 +8,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ExceptionFlag } from "@/lib/agent";
 import type { EvalScore } from "@/lib/eval";
+import type { FixtureId } from "@/lib/fixtures";
 import { cn } from "@/lib/utils";
 
 interface EvalReportProps {
+  fixtureId: FixtureId;
   exceptions: ExceptionFlag[] | null;
 }
 
-export function EvalReport({ exceptions }: EvalReportProps) {
+export function EvalReport({ fixtureId, exceptions }: EvalReportProps) {
   const [loading, setLoading] = useState(false);
   const [scores, setScores] = useState<EvalScore[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +29,7 @@ export function EvalReport({ exceptions }: EvalReportProps) {
       const response = await fetch("/api/eval", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ exceptions }),
+        body: JSON.stringify({ fixture_id: fixtureId, exceptions }),
       });
       if (!response.ok) {
         const err = await response.json().catch(() => ({ detail: "Eval failed" }));
@@ -50,8 +52,8 @@ export function EvalReport({ exceptions }: EvalReportProps) {
       setScores(null);
       setError(null);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-score when exception set changes
-  }, [exceptions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-score when fixture or exceptions change
+  }, [fixtureId, exceptions]);
 
   const allPassed = scores?.every((s) => s.passed) ?? false;
 

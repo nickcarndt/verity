@@ -11,25 +11,28 @@ Quick copy-paste sequence. Full details in [`DEPLOY.md`](./DEPLOY.md).
 
 ## 1. Railway — MCP service
 
-- [ ] New project → Deploy from GitHub → `nickcarndt/verity`
-- [ ] Service settings:
-  - Root: repo root
-  - Dockerfile: `services/mcp/Dockerfile`
-  - Config: `services/mcp/railway.toml`
-- [ ] Env vars:
+Open [railway.app/new](https://railway.app/new) → **Deploy from GitHub repo** → select `nickcarndt/verity`.
+
+- [ ] **New service** → Settings:
+  - **Root directory:** leave as repo root (`.`)
+  - **Builder:** Dockerfile
+  - **Dockerfile path:** `services/mcp/Dockerfile`
+  - Or paste `services/mcp/railway.toml` if Railway detects it
+- [ ] **Variables** tab → add:
   ```
   MCP_HOST=0.0.0.0
   MCP_PORT=8001
   VERITY_REPO_ROOT=/app
   ```
-- [ ] Generate public domain → note URL: `https://<mcp>.up.railway.app/mcp`
+- [ ] **Settings → Networking → Generate domain** → copy URL, append `/mcp`:
+  - Example: `https://verity-mcp-production.up.railway.app/mcp`
 
 ## 2. Railway — Agent service
 
-- [ ] Add second service from same repo
-  - Dockerfile: `services/agent/Dockerfile`
-  - Config: `services/agent/railway.toml`
-- [ ] Env vars:
+- [ ] In the **same Railway project**, click **+ New** → **GitHub Repo** → same `verity` repo again (second service)
+- [ ] Service settings:
+  - **Dockerfile path:** `services/agent/Dockerfile`
+- [ ] **Variables** tab → add:
   ```
   ANTHROPIC_API_KEY=<key>
   MCP_SERVER_URL=https://<mcp-service>/mcp
@@ -39,8 +42,9 @@ Quick copy-paste sequence. Full details in [`DEPLOY.md`](./DEPLOY.md).
   AGENT_PORT=8000
   VERITY_REPO_ROOT=/app
   ```
-- [ ] Generate public domain → note URL: `https://<agent>.up.railway.app`
-- [ ] Smoke test:
+- [ ] **Generate domain** for agent → copy base URL (no path):
+  - Example: `https://verity-agent-production.up.railway.app`
+- [ ] Smoke test (replace with your URL):
   ```bash
   curl https://<agent>/health
   curl -X POST https://<agent>/reconcile \
@@ -50,9 +54,9 @@ Quick copy-paste sequence. Full details in [`DEPLOY.md`](./DEPLOY.md).
 
 ## 3. Vercel — Frontend
 
-- [ ] Import `nickcarndt/verity` on Vercel
-- [ ] Root directory: `apps/web`
-- [ ] Env var:
+- [ ] [vercel.com/new](https://vercel.com/new) → Import `nickcarndt/verity`
+- [ ] **Root directory:** click Edit → set to `apps/web`
+- [ ] **Environment variables:**
   ```
   AGENT_API_URL=https://<agent>.up.railway.app
   ```

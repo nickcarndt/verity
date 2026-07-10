@@ -9,30 +9,27 @@ import {
 import { AgentTraceTimeline } from "@/components/agent-trace-timeline";
 import { SeverityBadge } from "@/components/exception-table";
 import type { AgentTraceEvent, ExceptionFlag } from "@/lib/agent";
+import { clauseTitle, type FixtureContract } from "@/lib/fixtures";
 import { formatCurrency, formatExceptionType, severityImpactClass } from "@/lib/utils";
-
-import contract from "@/data/nextera-systems/contract.json";
 
 interface ExceptionDrawerProps {
   exception: ExceptionFlag | null;
+  contract: FixtureContract;
   agentTrace: AgentTraceEvent[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-function clauseTitle(section: string): string | undefined {
-  return contract.clauses.find((clause) => clause.section === section)?.title;
-}
-
 export function ExceptionDrawer({
   exception,
+  contract,
   agentTrace,
   open,
   onOpenChange,
 }: ExceptionDrawerProps) {
   if (!exception) return null;
 
-  const title = clauseTitle(exception.clause_ref.section);
+  const title = clauseTitle(contract, exception.clause_ref.section);
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>

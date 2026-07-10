@@ -5,17 +5,18 @@ import { BookOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ExceptionFlag } from "@/lib/agent";
+import type { FixtureContract } from "@/lib/fixtures";
 import { cn } from "@/lib/utils";
 
-import contract from "@/data/nextera-systems/contract.json";
-
 interface ContractPanelProps {
+  contract: FixtureContract;
   exceptions: ExceptionFlag[];
   highlightedSection: string | null;
   onHighlightSection: (section: string) => void;
 }
 
 export function ContractPanel({
+  contract,
   exceptions,
   highlightedSection,
   onHighlightSection,

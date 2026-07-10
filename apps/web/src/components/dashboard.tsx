@@ -9,6 +9,7 @@ import { EvalReport } from "@/components/eval-report";
 import { ExceptionDrawer } from "@/components/exception-drawer";
 import { ExceptionTable } from "@/components/exception-table";
 import { ExceptionTableSkeleton } from "@/components/exception-table-skeleton";
+import { FixturePicker } from "@/components/fixture-picker";
 import { MetricCard } from "@/components/metric-card";
 import { PipelineTraceDrawer } from "@/components/pipeline-trace-drawer";
 import { ReconcileProgress } from "@/components/reconcile-progress";
@@ -17,13 +18,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MetaLabel, SectionHeading } from "@/components/ui/section-heading";
 import { type ExceptionFlag, type ReconcileResponse, runReconcile } from "@/lib/agent";
+import { getFixture, type FixtureId } from "@/lib/fixtures";
 import { formatCurrency } from "@/lib/utils";
 
-const FIXTURE_ID = "nextera-systems";
-const VENDOR_NAME = "Nextera Systems, Inc.";
-const INVOICE_COUNT = 5;
-
 export function Dashboard() {
+  const [fixtureId, setFixtureId] = useState<FixtureId>("nextera-systems");
+  const fixture = getFixture(fixtureId);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<ReconcileResponse | null>(null);
@@ -47,12 +48,29 @@ export function Dashboard() {
     return result.reconciliation_results.filter((r) => r.status === "matched").length;
   }, [result]);
 
+  function resetRunState() {
+    setResult(null);
+    setError(null);
+    setSelected(null);
+    setFocused(null);
+    setDrawerOpen(false);
+    setTraceOpen(false);
+    setHighlightedSection(null);
+    setMetricsAnimate(false);
+  }
+
+  function handleFixtureChange(nextFixtureId: FixtureId) {
+    if (nextFixtureId === fixtureId) return;
+    setFixtureId(nextFixtureId);
+    resetRunState();
+  }
+
   async function handleReconcile() {
     setLoading(true);
     setError(null);
     setMetricsAnimate(false);
     try {
-      const response = await runReconcile(FIXTURE_ID);
+      const response = await runReconcile(fixtureId);
       setResult(response);
       setMetricsAnimate(true);
       setFocused(null);
@@ -92,13 +110,19 @@ export function Dashboard() {
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-12">
       <section className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
+        <div className="space-y-3">
           <MetaLabel>Fixture</MetaLabel>
-          <h2 className="mt-1 text-[30px] font-semibold tracking-[-0.02em]">Nextera Systems</h2>
-          <p className="mt-1 max-w-xl text-sm leading-relaxed text-muted-foreground">
-            Master SaaS Platform Agreement — {INVOICE_COUNT} invoices, 1 clean, 4 labeled
-            exceptions.
-          </p>
+          <FixturePicker
+            value={fixtureId}
+            disabled={loading}
+            onChange={handleFixtureChange}
+          />
+          <div>
+            <h2 className="text-[30px] font-semibold tracking-[-0.02em]">{fixture.name}</h2>
+            <p className="mt-1 max-w-xl text-sm leading-relaxed text-muted-foreground">
+              {fixture.agreementTitle} — {fixture.description}
+            </p>
+          </div>
         </div>
         <div className="flex flex-wrap gap-2">
           {result && (
@@ -129,8 +153,8 @@ export function Dashboard() {
           <FileSearch className="mb-3 h-9 w-9 text-subtle" />
           <h3 className="text-xl font-semibold tracking-[-0.01em]">Ready to reconcile</h3>
           <p className="mt-2 max-w-md text-sm text-muted-foreground">
-            Run the agent pipeline to extract obligations, reconcile invoices, and
-            surface clause-grounded exceptions.
+            Run the agent pipeline on {fixture.name} to extract obligations, reconcile
+            invoices, and surface clause-grounded exceptions.
           </p>
         </div>
       )}
@@ -173,7 +197,7 @@ export function Dashboard() {
             <MetricCard
               label="Exceptions flagged"
               value={result.exception_count}
-              subtitle={`of ${INVOICE_COUNT} invoices`}
+              subtitle={`of ${fixture.invoiceCount} invoices`}
               animate={metricsAnimate}
             />
             <MetricCard
@@ -186,7 +210,7 @@ export function Dashboard() {
             <MetricCard
               label="Clean invoices"
               value={matchedCount}
-              subtitle={`${INVOICE_COUNT - matchedCount} flagged`}
+              subtitle={`${fixture.invoiceCount - matchedCount} flagged`}
               animate={metricsAnimate}
               valueClassName="text-success"
             />
@@ -199,7 +223,7 @@ export function Dashboard() {
             />
             <ExceptionTable
               exceptions={result.exceptions}
-              vendorName={VENDOR_NAME}
+              vendorName={fixture.vendorName}
               focusedId={focused?.id ?? null}
               drawerOpen={drawerOpen}
               keyboardEnabled={!traceOpen}
@@ -213,11 +237,12 @@ export function Dashboard() {
 
           <div className="grid gap-8 lg:grid-cols-2">
             <ContractPanel
+              contract={fixture.contract}
               exceptions={result.exceptions}
               highlightedSection={highlightedSection}
               onHighlightSection={handleClauseClick}
             />
-            <EvalReport exceptions={result.exceptions} />
+            <EvalReport fixtureId={fixtureId} exceptions={result.exceptions} />
           </div>
 
           <ReportView report={result.report} />
@@ -226,6 +251,7 @@ export function Dashboard() {
 
       <ExceptionDrawer
         exception={selected}
+        contract={fixture.contract}
         agentTrace={result?.agent_trace ?? []}
         open={drawerOpen}
         onOpenChange={(open) => {

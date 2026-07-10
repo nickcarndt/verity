@@ -138,3 +138,11 @@ Exception table keyboard workflow per DESIGN_SPEC power-user pattern:
 - **Product dashboard** moved to `/app` — separates marketing wow from product restraint
 - **`harbor-analytics` fixture** — second vendor scenario ($15k cap, 4 labeled exceptions) added to eval dataset
 - **`DEPLOY_CHECKLIST.md`** — copy-paste Railway → Vercel deploy sequence
+
+## Day 16 — Fixture picker
+
+Dashboard fixture switcher for Nextera Systems and Harbor Analytics:
+
+- Segmented control in dashboard header — switching fixtures clears prior run state
+- Contract panel, eval report, and exception drawer load per-fixture contract + labels
+- `/api/eval` and `/api/contract` accept `fixture_id`

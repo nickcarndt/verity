@@ -1,0 +1,33 @@
+{
+  "id": "contract-harbor-2025",
+  "vendor_name": "Harbor Analytics, LLC",
+  "title": "Managed Analytics Services Agreement",
+  "effective_date": "2025-01-01",
+  "end_date": "2025-12-31",
+  "clauses": [
+    {
+      "id": "clause-2-1",
+      "section": "2.1",
+      "title": "Term",
+      "text": "This Agreement is effective January 1, 2025 and expires December 31, 2025, unless earlier terminated per Section 8."
+    },
+    {
+      "id": "clause-3-2",
+      "section": "3.2",
+      "title": "Monthly Services Fee",
+      "text": "Customer shall pay Vendor a monthly services fee not to exceed Fifteen Thousand U.S. Dollars ($15,000) per calendar month for analytics support."
+    },
+    {
+      "id": "clause-4-1",
+      "section": "4.1",
+      "title": "Purchase Order Requirement",
+      "text": "Vendor shall reference a valid Harbor purchase order number on every invoice submitted for payment."
+    },
+    {
+      "id": "clause-6-2",
+      "section": "6.2",
+      "title": "Invoice Uniqueness",
+      "text": "Vendor shall not submit duplicate invoices for the same billing period or invoice number."
+    }
+  ]
+}
