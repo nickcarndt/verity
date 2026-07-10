@@ -18,7 +18,7 @@ def build_reconcile_dataset() -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
 
     # Expand with more fixture IDs as scenarios are added.
-    for fixture_id in ("nextera-systems",):
+    for fixture_id in ("nextera-systems", "harbor-analytics"):
         fixture = load_fixture(fixture_id)
         rows.append(
             {

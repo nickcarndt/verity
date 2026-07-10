@@ -1,0 +1,15 @@
+{
+  "id": "harbor-analytics",
+  "name": "Harbor Analytics Services Agreement",
+  "description": "One compliant invoice plus four exception types: overbilling, missing PO, out-of-term, and duplicate.",
+  "contract_file": "contract.json",
+  "invoice_files": [
+    "invoices/inv-ha-001.json",
+    "invoices/inv-ha-002.json",
+    "invoices/inv-ha-003.json",
+    "invoices/inv-ha-004.json",
+    "invoices/inv-ha-005-duplicate.json"
+  ],
+  "expected_obligations_file": "labels/expected_obligations.json",
+  "expected_exceptions_file": "labels/expected_exceptions.json"
+}

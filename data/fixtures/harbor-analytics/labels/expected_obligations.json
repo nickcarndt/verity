@@ -1,0 +1,54 @@
+[
+  {
+    "id": "obl-3-2-fee-cap",
+    "type": "fee_cap",
+    "description": "Monthly services fee must not exceed $15,000 per calendar month.",
+    "clause_ref": {
+      "section": "3.2",
+      "text": "Customer shall pay Vendor a monthly services fee not to exceed Fifteen Thousand U.S. Dollars ($15,000) per calendar month for analytics support."
+    },
+    "max_amount": "15000.00",
+    "requires_po": false,
+    "valid_from": null,
+    "valid_to": null
+  },
+  {
+    "id": "obl-4-1-po-required",
+    "type": "po_required",
+    "description": "Every invoice must reference a valid Harbor purchase order.",
+    "clause_ref": {
+      "section": "4.1",
+      "text": "Vendor shall reference a valid Harbor purchase order number on every invoice submitted for payment."
+    },
+    "max_amount": null,
+    "requires_po": true,
+    "valid_from": null,
+    "valid_to": null
+  },
+  {
+    "id": "obl-2-1-term-window",
+    "type": "term_window",
+    "description": "Invoices must fall within the contract term of 2025-01-01 to 2025-12-31.",
+    "clause_ref": {
+      "section": "2.1",
+      "text": "This Agreement is effective January 1, 2025 and expires December 31, 2025, unless earlier terminated per Section 8."
+    },
+    "max_amount": null,
+    "requires_po": false,
+    "valid_from": "2025-01-01",
+    "valid_to": "2025-12-31"
+  },
+  {
+    "id": "obl-6-2-no-duplicates",
+    "type": "no_duplicates",
+    "description": "Vendor must not submit duplicate invoices for the same billing period or invoice number.",
+    "clause_ref": {
+      "section": "6.2",
+      "text": "Vendor shall not submit duplicate invoices for the same billing period or invoice number."
+    },
+    "max_amount": null,
+    "requires_po": false,
+    "valid_from": null,
+    "valid_to": null
+  }
+]

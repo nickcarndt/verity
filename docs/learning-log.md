@@ -131,3 +131,10 @@ Exception table keyboard workflow per DESIGN_SPEC power-user pattern:
 - Dashboard run summary + pipeline drawer link to the full Braintrust span hierarchy
 - `/health` exposes `tracing_enabled` for ops visibility
 - Vercel deploy docs + monorepo-aware `vercel.json` install command for `@verity/shared`
+
+## Day 15 — Landing page + harbor-analytics fixture
+
+- **Landing page** at `/` — marketing surface per DESIGN_SPEC §3 (hero, proof moment with real $29,450 stats, how-it-works, architecture credibility, CTA)
+- **Product dashboard** moved to `/app` — separates marketing wow from product restraint
+- **`harbor-analytics` fixture** — second vendor scenario ($15k cap, 4 labeled exceptions) added to eval dataset
+- **`DEPLOY_CHECKLIST.md`** — copy-paste Railway → Vercel deploy sequence

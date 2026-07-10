@@ -1,0 +1,22 @@
+{
+  "id": "inv-ha-002",
+  "invoice_number": "INV-HA-002",
+  "vendor_name": "Harbor Analytics, LLC",
+  "invoice_date": "2025-02-28",
+  "po_number": "PO-HA-102",
+  "line_items": [
+    {
+      "description": "Analytics support — February 2025",
+      "quantity": "1",
+      "unit_price": "15000.00",
+      "amount": "15000.00"
+    },
+    {
+      "description": "Ad-hoc dashboard build",
+      "quantity": "1",
+      "unit_price": "2500.00",
+      "amount": "2500.00"
+    }
+  ],
+  "total_amount": "17500.00"
+}

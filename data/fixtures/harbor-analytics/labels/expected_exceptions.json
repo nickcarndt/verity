@@ -1,0 +1,54 @@
+[
+  {
+    "id": "exc-overbilling-inv-ha-002",
+    "type": "overbilling",
+    "severity": "high",
+    "description": "Invoice exceeds the $15,000.00 monthly fee cap.",
+    "dollar_impact": "2500.00",
+    "clause_ref": {
+      "section": "3.2",
+      "text": "Customer shall pay Vendor a monthly services fee not to exceed Fifteen Thousand U.S. Dollars ($15,000) per calendar month for analytics support."
+    },
+    "invoice_id": "inv-ha-002",
+    "evidence": "Billed $17,500.00 vs $15,000.00 monthly cap — $2,500.00 over limit."
+  },
+  {
+    "id": "exc-missing-po-inv-ha-003",
+    "type": "missing_po",
+    "severity": "medium",
+    "description": "Invoice submitted without a purchase order reference.",
+    "dollar_impact": "11000.00",
+    "clause_ref": {
+      "section": "4.1",
+      "text": "Vendor shall reference a valid Harbor purchase order number on every invoice submitted for payment."
+    },
+    "invoice_id": "inv-ha-003",
+    "evidence": "Invoice INV-HA-003 has no po_number."
+  },
+  {
+    "id": "exc-out-of-term-inv-ha-004",
+    "type": "out_of_term",
+    "severity": "critical",
+    "description": "Invoice date falls outside the contract term.",
+    "dollar_impact": "12500.00",
+    "clause_ref": {
+      "section": "2.1",
+      "text": "This Agreement is effective January 1, 2025 and expires December 31, 2025, unless earlier terminated per Section 8."
+    },
+    "invoice_id": "inv-ha-004",
+    "evidence": "Invoice date 2026-01-20 is outside 2025-01-01 to 2025-12-31."
+  },
+  {
+    "id": "exc-duplicate-inv-ha-005",
+    "type": "duplicate_invoice",
+    "severity": "high",
+    "description": "Duplicate submission of invoice INV-HA-001.",
+    "dollar_impact": "14200.00",
+    "clause_ref": {
+      "section": "6.2",
+      "text": "Vendor shall not submit duplicate invoices for the same billing period or invoice number."
+    },
+    "invoice_id": "inv-ha-005",
+    "evidence": "Invoice number INV-HA-001 already received."
+  }
+]

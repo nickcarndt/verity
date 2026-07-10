@@ -1,0 +1,16 @@
+{
+  "id": "inv-ha-005",
+  "invoice_number": "INV-HA-001",
+  "vendor_name": "Harbor Analytics, LLC",
+  "invoice_date": "2025-04-15",
+  "po_number": "PO-HA-105",
+  "line_items": [
+    {
+      "description": "Analytics support — duplicate January submission",
+      "quantity": "1",
+      "unit_price": "14200.00",
+      "amount": "14200.00"
+    }
+  ],
+  "total_amount": "14200.00"
+}

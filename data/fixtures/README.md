@@ -7,6 +7,7 @@ Synthetic contracts and invoices for development, evals, and demos.
 | ID | Description | Exception types covered |
 |---|---|---|
 | `nextera-systems` | Nextera Systems SaaS agreement with 5 invoices | overbilling, missing_po, out_of_term, duplicate_invoice |
+| `harbor-analytics` | Harbor Analytics managed services with 5 invoices | overbilling, missing_po, out_of_term, duplicate_invoice |
 
 ## Layout
 
