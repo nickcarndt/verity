@@ -1,0 +1,22 @@
+{
+  "id": "inv-2025-002",
+  "invoice_number": "INV-2025-002",
+  "vendor_name": "Nextera Systems, Inc.",
+  "invoice_date": "2025-02-28",
+  "po_number": "PO-4402",
+  "line_items": [
+    {
+      "description": "Platform subscription — February 2025",
+      "quantity": "1",
+      "unit_price": "10000.00",
+      "amount": "10000.00"
+    },
+    {
+      "description": "Premium support add-on",
+      "quantity": "1",
+      "unit_price": "2750.00",
+      "amount": "2750.00"
+    }
+  ],
+  "total_amount": "12750.00"
+}

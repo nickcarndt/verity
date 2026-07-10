@@ -26,6 +26,7 @@
 - No secrets in code — use environment variables.
 
 ## Design standards (UI is first-class, not an afterthought)
+- Read `docs/DESIGN_SPEC.md` before building any UI — product vs. marketing surfaces have opposite design goals.
 - The UI must look like a premium, production-grade fintech product — not a demo.
 - Use shadcn/ui components + Tailwind. Clean, modern, generous spacing, considered typography.
 - Design like a real dashboard: exception table, severity badges, dollar-impact emphasis, clickable trace drawers, smooth streaming states, thoughtful empty/loading states.

@@ -1,0 +1,15 @@
+{
+  "id": "nextera-systems",
+  "name": "Nextera Systems SaaS Agreement",
+  "description": "One compliant invoice plus four exception types: overbilling, missing PO, out-of-term, and duplicate.",
+  "contract_file": "contract.json",
+  "invoice_files": [
+    "invoices/inv-2025-001.json",
+    "invoices/inv-2025-002.json",
+    "invoices/inv-2025-003.json",
+    "invoices/inv-2025-004.json",
+    "invoices/inv-2025-005-duplicate.json"
+  ],
+  "expected_obligations_file": "labels/expected_obligations.json",
+  "expected_exceptions_file": "labels/expected_exceptions.json"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "inv-2025-005",
+  "invoice_number": "INV-2025-001",
+  "vendor_name": "Nextera Systems, Inc.",
+  "invoice_date": "2025-01-31",
+  "po_number": "PO-4401",
+  "line_items": [
+    {
+      "description": "Platform subscription — January 2025",
+      "quantity": "1",
+      "unit_price": "9500.00",
+      "amount": "9500.00"
+    }
+  ],
+  "total_amount": "9500.00"
+}

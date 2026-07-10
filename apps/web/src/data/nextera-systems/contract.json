@@ -1,0 +1,33 @@
+{
+  "id": "contract-nextera-2025",
+  "vendor_name": "Nextera Systems, Inc.",
+  "title": "Master SaaS Platform Agreement",
+  "effective_date": "2025-01-01",
+  "end_date": "2025-12-31",
+  "clauses": [
+    {
+      "id": "clause-2-1",
+      "section": "2.1",
+      "title": "Term",
+      "text": "This Agreement is effective January 1, 2025 and expires December 31, 2025, unless earlier terminated per Section 9."
+    },
+    {
+      "id": "clause-3-1",
+      "section": "3.1",
+      "title": "Monthly Platform Fee",
+      "text": "Customer shall pay Vendor a monthly platform fee not to exceed Ten Thousand U.S. Dollars ($10,000) per calendar month for the subscribed services."
+    },
+    {
+      "id": "clause-4-2",
+      "section": "4.2",
+      "title": "Purchase Order Requirement",
+      "text": "Vendor shall reference a valid Nextera purchase order number on every invoice submitted for payment."
+    },
+    {
+      "id": "clause-5-3",
+      "section": "5.3",
+      "title": "Invoice Uniqueness",
+      "text": "Vendor shall not submit duplicate invoices for the same billing period or invoice number."
+    }
+  ]
+}

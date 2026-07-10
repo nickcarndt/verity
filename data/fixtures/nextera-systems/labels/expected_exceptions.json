@@ -1,0 +1,54 @@
+[
+  {
+    "id": "exc-overbilling-002",
+    "type": "overbilling",
+    "severity": "high",
+    "description": "February invoice exceeds the $10,000 monthly platform fee cap.",
+    "dollar_impact": "2750.00",
+    "clause_ref": {
+      "section": "3.1",
+      "text": "Customer shall pay Vendor a monthly platform fee not to exceed Ten Thousand U.S. Dollars ($10,000) per calendar month for the subscribed services."
+    },
+    "invoice_id": "inv-2025-002",
+    "evidence": "Billed $12,750.00 vs $10,000.00 monthly cap — $2,750.00 over limit."
+  },
+  {
+    "id": "exc-missing-po-003",
+    "type": "missing_po",
+    "severity": "medium",
+    "description": "March invoice submitted without a purchase order reference.",
+    "dollar_impact": "8200.00",
+    "clause_ref": {
+      "section": "4.2",
+      "text": "Vendor shall reference a valid Nextera purchase order number on every invoice submitted for payment."
+    },
+    "invoice_id": "inv-2025-003",
+    "evidence": "Invoice INV-2025-003 has no po_number field."
+  },
+  {
+    "id": "exc-out-of-term-004",
+    "type": "out_of_term",
+    "severity": "critical",
+    "description": "January 2026 invoice falls outside the contract term.",
+    "dollar_impact": "9000.00",
+    "clause_ref": {
+      "section": "2.1",
+      "text": "This Agreement is effective January 1, 2025 and expires December 31, 2025, unless earlier terminated per Section 9."
+    },
+    "invoice_id": "inv-2025-004",
+    "evidence": "Invoice date 2026-01-15 is after contract end date 2025-12-31."
+  },
+  {
+    "id": "exc-duplicate-005",
+    "type": "duplicate_invoice",
+    "severity": "high",
+    "description": "Duplicate submission of invoice number INV-2025-001.",
+    "dollar_impact": "9500.00",
+    "clause_ref": {
+      "section": "5.3",
+      "text": "Vendor shall not submit duplicate invoices for the same billing period or invoice number."
+    },
+    "invoice_id": "inv-2025-005",
+    "evidence": "Invoice number INV-2025-001 already received as inv-2025-001 on 2025-01-31."
+  }
+]

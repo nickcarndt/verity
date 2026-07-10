@@ -1,0 +1,54 @@
+[
+  {
+    "id": "obl-fee-cap",
+    "type": "fee_cap",
+    "description": "Monthly platform fee must not exceed $10,000 per calendar month.",
+    "clause_ref": {
+      "section": "3.1",
+      "text": "Customer shall pay Vendor a monthly platform fee not to exceed Ten Thousand U.S. Dollars ($10,000) per calendar month for the subscribed services."
+    },
+    "max_amount": "10000.00",
+    "requires_po": false,
+    "valid_from": null,
+    "valid_to": null
+  },
+  {
+    "id": "obl-po-required",
+    "type": "po_required",
+    "description": "Every invoice must reference a valid Nextera purchase order.",
+    "clause_ref": {
+      "section": "4.2",
+      "text": "Vendor shall reference a valid Nextera purchase order number on every invoice submitted for payment."
+    },
+    "max_amount": null,
+    "requires_po": true,
+    "valid_from": null,
+    "valid_to": null
+  },
+  {
+    "id": "obl-term-window",
+    "type": "term_window",
+    "description": "Invoices must fall within the contract term of 2025-01-01 to 2025-12-31.",
+    "clause_ref": {
+      "section": "2.1",
+      "text": "This Agreement is effective January 1, 2025 and expires December 31, 2025, unless earlier terminated per Section 9."
+    },
+    "max_amount": null,
+    "requires_po": false,
+    "valid_from": "2025-01-01",
+    "valid_to": "2025-12-31"
+  },
+  {
+    "id": "obl-no-duplicates",
+    "type": "no_duplicates",
+    "description": "Vendor must not submit duplicate invoices for the same billing period or invoice number.",
+    "clause_ref": {
+      "section": "5.3",
+      "text": "Vendor shall not submit duplicate invoices for the same billing period or invoice number."
+    },
+    "max_amount": null,
+    "requires_po": false,
+    "valid_from": null,
+    "valid_to": null
+  }
+]
