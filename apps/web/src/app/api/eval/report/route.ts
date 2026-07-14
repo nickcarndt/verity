@@ -29,10 +29,18 @@ export async function POST(request: Request) {
 
   const fixtureId = parsed.data.fixture_id as FixtureId;
   const fixture = FIXTURES[fixtureId];
+  // Prefer fixture inventory, plus any IDs present on structured exceptions
+  // (covers filename vs invoice.id mismatches like inv-2025-005-duplicate → inv-2025-005).
+  const invoiceIds = Array.from(
+    new Set([
+      ...fixture.invoiceIds,
+      ...parsed.data.exceptions.map((e) => e.invoice_id),
+    ]),
+  );
   const scored = scoreReportFaithfulness({
     report: parsed.data.report,
     exceptions: parsed.data.exceptions,
-    invoiceIds: fixture.invoiceIds,
+    invoiceIds,
     contractSections: fixture.contract.clauses.map((c) => c.section),
   });
 
