@@ -48,6 +48,13 @@ class Settings(BaseSettings):
             "When set, callers must send Authorization: Bearer <key>."
         ),
     )
+    agent_require_api_key: bool = Field(
+        default=False,
+        description=(
+            "When true, refuse to start reconcile auth if AGENT_API_KEY is unset "
+            "(production fail-closed). Local leave false."
+        ),
+    )
 
 
 @lru_cache

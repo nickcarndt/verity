@@ -30,6 +30,8 @@ def build_reconcile_dataset() -> list[dict[str, Any]]:
                     "fixture_id": fixture_id,
                     "fixture_name": fixture.manifest.name,
                     "invoice_count": len(fixture.invoices),
+                    "invoice_ids": [inv.id for inv in fixture.invoices],
+                    "contract_sections": [clause.section for clause in fixture.contract.clauses],
                 },
             },
         )

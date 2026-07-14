@@ -41,14 +41,18 @@ Open [railway.app/new](https://railway.app/new) → **Deploy from GitHub repo** 
   AGENT_HOST=0.0.0.0
   AGENT_PORT=8000
   VERITY_REPO_ROOT=/app
+  AGENT_API_KEY=<shared-secret>
+  AGENT_REQUIRE_API_KEY=true
   ```
 - [ ] **Generate domain** for agent → copy base URL (no path):
   - Example: `https://verity-agent-production.up.railway.app`
 - [ ] Smoke test (replace with your URL):
   ```bash
   curl https://<agent>/health
+  # Expect 401 without Bearer when AGENT_REQUIRE_API_KEY=true
   curl -X POST https://<agent>/reconcile \
     -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <shared-secret>" \
     -d '{"fixture_id": "nextera-systems"}'
   ```
 
@@ -59,6 +63,7 @@ Open [railway.app/new](https://railway.app/new) → **Deploy from GitHub repo** 
 - [ ] **Environment variables:**
   ```
   AGENT_API_URL=https://<agent>.up.railway.app
+  AGENT_API_KEY=<same-shared-secret-as-agent>
   ```
 - [ ] Deploy
 - [ ] Smoke test: open `https://<vercel-app>/app` → Run reconciliation
@@ -69,3 +74,4 @@ Open [railway.app/new](https://railway.app/new) → **Deploy from GitHub repo** 
 - [ ] Braintrust link appears in run summary (if tracing enabled)
 - [ ] Keyboard nav works (↑↓ Enter Esc)
 - [ ] Eval report shows all scorers passed
+- [ ] Report faithfulness card scores the written report separately

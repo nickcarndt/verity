@@ -65,6 +65,8 @@ python services/mcp/scripts/verify_tools.py
 
 Tools exposed: `parse_invoice`, `extract_obligations`, `reconcile`
 
+`extract_obligations` is fixture-era keyword extraction over clause text — deterministic for evals, not production NLP.
+
 ### Agent service (Phase 4)
 
 Requires MCP server running on port 8001.

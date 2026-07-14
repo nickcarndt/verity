@@ -47,10 +47,13 @@ MCP_SERVER_URL=https://<mcp-service>/mcp
 BRAINTRUST_API_KEY=<your-key>
 BRAINTRUST_PROJECT=verity
 AGENT_API_KEY=<shared-secret>
+AGENT_REQUIRE_API_KEY=true
 AGENT_HOST=0.0.0.0
 AGENT_PORT=8000
 VERITY_REPO_ROOT=/app
 ```
+
+`AGENT_REQUIRE_API_KEY=true` fail-closes if `AGENT_API_KEY` is unset (503). Leave it unset/false for local open access.
 
 Health check: `GET /health` (no auth)
 

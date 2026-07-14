@@ -33,6 +33,8 @@ export type FixtureMeta = {
   description: string;
   invoiceCount: number;
   labeledExceptions: number;
+  /** Full fixture invoice inventory for report faithfulness grounding. */
+  invoiceIds: string[];
   contract: FixtureContract;
   expectedExceptions: ExceptionFlag[];
 };
@@ -61,6 +63,13 @@ export const FIXTURES: Record<FixtureId, FixtureMeta> = {
       description: "5 invoices — 1 clean, 4 labeled exceptions ($10k monthly cap).",
       invoiceCount: 5,
       labeledExceptions: 4,
+      invoiceIds: [
+        "inv-2025-001",
+        "inv-2025-002",
+        "inv-2025-003",
+        "inv-2025-004",
+        "inv-2025-005-duplicate",
+      ],
     },
     nexteraContract,
     nexteraExpected,
@@ -74,6 +83,13 @@ export const FIXTURES: Record<FixtureId, FixtureMeta> = {
       description: "5 invoices — 1 clean, 4 labeled exceptions ($15k monthly cap).",
       invoiceCount: 5,
       labeledExceptions: 4,
+      invoiceIds: [
+        "inv-ha-001",
+        "inv-ha-002",
+        "inv-ha-003",
+        "inv-ha-004",
+        "inv-ha-005-duplicate",
+      ],
     },
     harborContract,
     harborExpected,

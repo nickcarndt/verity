@@ -1,0 +1,47 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+
+import { ExceptionFlagSchema } from "@/lib/agent";
+import { FIXTURES, type FixtureId } from "@/lib/fixtures";
+import { scoreReportFaithfulness } from "@/lib/report-faithfulness";
+
+const RequestSchema = z.object({
+  fixture_id: z.enum(["nextera-systems", "harbor-analytics"]),
+  report: z.string().min(1),
+  exceptions: z.array(ExceptionFlagSchema),
+});
+
+export async function POST(request: Request) {
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ detail: "Invalid JSON body" }, { status: 400 });
+  }
+
+  const parsed = RequestSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { detail: "fixture_id, report, and exceptions are required" },
+      { status: 400 },
+    );
+  }
+
+  const fixtureId = parsed.data.fixture_id as FixtureId;
+  const fixture = FIXTURES[fixtureId];
+  const scored = scoreReportFaithfulness({
+    report: parsed.data.report,
+    exceptions: parsed.data.exceptions,
+    invoiceIds: fixture.invoiceIds,
+    contractSections: fixture.contract.clauses.map((c) => c.section),
+  });
+
+  return NextResponse.json({
+    fixture_id: fixtureId,
+    kind: "report_faithfulness",
+    score: scored.score,
+    passed: scored.passed,
+    checks: scored.checks,
+    scores: scored.scores,
+  });
+}

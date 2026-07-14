@@ -1,4 +1,9 @@
-"""extract_obligations tool — derive payment rules from contract clauses."""
+"""extract_obligations tool — derive payment rules from contract clauses.
+
+Honesty note (fixture era): this is keyword / regex extraction over clause text,
+not production NLP or LLM extraction. It is intentionally deterministic for
+evals. Swap the body later without changing the tool signature.
+"""
 
 import json
 import re
@@ -37,8 +42,10 @@ def _obligation_id(clause: Clause, suffix: str) -> str:
 def extract_obligations_from_contract(contract: Contract) -> list[Obligation]:
     """Derive structured obligations from contract clause text.
 
-    Uses keyword matching on clause content — deterministic and eval-friendly.
-    Later phases can swap in LLM extraction without changing the tool signature.
+    Fixture-era keyword extract (not production NLP): matches phrases like
+    "not to exceed", "purchase order", term windows, and "duplicate".
+    Deterministic and eval-friendly; later phases can swap in LLM extraction
+    without changing the tool signature.
     """
     obligations: list[Obligation] = []
 

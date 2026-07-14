@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, ClipboardCheck, XCircle } from "lucide-react";
+import { CheckCircle2, FileCheck2, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { EvalReportSkeleton } from "@/components/eval-report-skeleton";
@@ -11,34 +11,43 @@ import type { EvalScore } from "@/lib/eval";
 import type { FixtureId } from "@/lib/fixtures";
 import { cn } from "@/lib/utils";
 
-interface EvalReportProps {
+interface ReportFaithfulnessProps {
   fixtureId: FixtureId;
+  report: string | null;
   exceptions: ExceptionFlag[] | null;
 }
 
-export function EvalReport({ fixtureId, exceptions }: EvalReportProps) {
+export function ReportFaithfulnessCard({
+  fixtureId,
+  report,
+  exceptions,
+}: ReportFaithfulnessProps) {
   const [loading, setLoading] = useState(false);
   const [scores, setScores] = useState<EvalScore[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  async function runEval() {
-    if (!exceptions?.length) return;
+  async function runScore() {
+    if (!report?.trim() || !exceptions?.length) return;
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("/api/eval", {
+      const response = await fetch("/api/eval/report", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fixture_id: fixtureId, exceptions }),
+        body: JSON.stringify({
+          fixture_id: fixtureId,
+          report,
+          exceptions,
+        }),
       });
       if (!response.ok) {
-        const err = await response.json().catch(() => ({ detail: "Eval failed" }));
-        throw new Error(typeof err.detail === "string" ? err.detail : "Eval failed");
+        const err = await response.json().catch(() => ({ detail: "Scoring failed" }));
+        throw new Error(typeof err.detail === "string" ? err.detail : "Scoring failed");
       }
       const data = await response.json();
       setScores(data.scores);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Eval failed");
+      setError(err instanceof Error ? err.message : "Scoring failed");
       setScores(null);
     } finally {
       setLoading(false);
@@ -46,14 +55,14 @@ export function EvalReport({ fixtureId, exceptions }: EvalReportProps) {
   }
 
   useEffect(() => {
-    if (exceptions?.length) {
-      void runEval();
+    if (report?.trim() && exceptions?.length) {
+      void runScore();
     } else {
       setScores(null);
       setError(null);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-score when fixture or exceptions change
-  }, [fixtureId, exceptions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-score when inputs change
+  }, [fixtureId, report, exceptions]);
 
   const allPassed = scores?.every((s) => s.passed) ?? false;
 
@@ -62,28 +71,28 @@ export function EvalReport({ fixtureId, exceptions }: EvalReportProps) {
       <CardHeader className="flex flex-row items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <ClipboardCheck className="h-4 w-4 text-subtle" />
-            <CardTitle>Eval report</CardTitle>
+            <FileCheck2 className="h-4 w-4 text-subtle" />
+            <CardTitle>Report faithfulness</CardTitle>
           </div>
           <CardDescription className="mt-1">
-            Detection scores — reconciliation exceptions vs labeled fixture ground truth
-            (not the written report).
+            Checks that Claude&apos;s prose cites only invoice IDs, clause sections, and
+            dollar amounts from structured reconcile output — separate from detection scores.
           </CardDescription>
         </div>
         <Button
           variant="outline"
           size="sm"
-          onClick={runEval}
-          disabled={loading || !exceptions?.length}
+          onClick={runScore}
+          disabled={loading || !report?.trim() || !exceptions?.length}
         >
           {loading ? "Scoring…" : "Re-run"}
         </Button>
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {!exceptions?.length && (
+        {(!report?.trim() || !exceptions?.length) && (
           <p className="text-sm text-muted-foreground">
-            Run reconciliation first to score against labels.
+            Run reconciliation first to score the written report.
           </p>
         )}
 
@@ -104,7 +113,7 @@ export function EvalReport({ fixtureId, exceptions }: EvalReportProps) {
               ) : (
                 <XCircle className="h-4 w-4" />
               )}
-              {allPassed ? "All scorers passed" : "Some scorers failed"}
+              {allPassed ? "Report grounded in structured output" : "Ungrounded citations found"}
             </div>
 
             <ul className="space-y-3">

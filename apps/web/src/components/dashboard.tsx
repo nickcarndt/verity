@@ -13,6 +13,7 @@ import { FixturePicker } from "@/components/fixture-picker";
 import { MetricCard } from "@/components/metric-card";
 import { PipelineTraceDrawer } from "@/components/pipeline-trace-drawer";
 import { ReconcileProgress } from "@/components/reconcile-progress";
+import { ReportFaithfulnessCard } from "@/components/report-faithfulness";
 import { ReportView } from "@/components/report-view";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -243,7 +244,14 @@ export function Dashboard() {
               highlightedSection={highlightedSection}
               onHighlightSection={handleClauseClick}
             />
-            <EvalReport fixtureId={fixtureId} exceptions={result.exceptions} />
+            <div className="space-y-8">
+              <EvalReport fixtureId={fixtureId} exceptions={result.exceptions} />
+              <ReportFaithfulnessCard
+                fixtureId={fixtureId}
+                report={result.report}
+                exceptions={result.exceptions}
+              />
+            </div>
           </div>
 
           <ReportView report={result.report} />
