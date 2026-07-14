@@ -545,4 +545,18 @@ That paragraph is more hireable than “autonomous multi-agent system.”
 
 ---
 
+## Status note (post-harden / Phase A)
+
+This audit captured the repo at **B−** before the honesty pass. Since then:
+
+- Supervisor framing → fixed `build_reconcile_pipeline` (no fabricated plan span)
+- Chat/`/invoke` removed; docs aligned to deterministic tools + Claude report
+- Fixtures-only MCP paths, bearer auth + `AGENT_REQUIRE_API_KEY` fail-closed
+- Report faithfulness eval (separate from detection), CI, typed schemas
+- Phase A safety: path unit tests, timeouts, report graceful degrade, rate limit, truthful `tracing_enabled`
+
+**Treat this document as a historical critique**, not the current pitch. Current defendable story: MCP tools decide; Claude formats; evals prove detection; pgvector retrieval is next-week spine (not claimed yet).
+
+---
+
 *End of audit.*

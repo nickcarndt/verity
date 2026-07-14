@@ -26,6 +26,7 @@ export const AgentTraceEventSchema = z.object({
 export const ReconcileResponseSchema = z.object({
   fixture_id: z.enum(["nextera-systems", "harbor-analytics"]),
   report: z.string(),
+  report_error: z.string().nullable().optional(),
   exception_count: z.number(),
   exceptions: z.array(ExceptionFlagSchema),
   reconciliation_results: z.array(

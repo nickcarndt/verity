@@ -5,18 +5,26 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 interface ReportViewProps {
   report: string;
+  reportError?: string | null;
 }
 
-export function ReportView({ report }: ReportViewProps) {
+export function ReportView({ report, reportError }: ReportViewProps) {
   return (
     <Card>
       <CardHeader>
         <CardTitle>Agent report</CardTitle>
         <CardDescription>
-          Claude-generated exception summary with clause citations.
+          {reportError
+            ? "Structured exceptions succeeded; Claude report generation failed."
+            : "Claude-generated exception summary with clause citations."}
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {reportError && (
+          <p className="mb-3 rounded-md border border-critical/20 bg-critical-bg px-3 py-2 text-sm text-critical">
+            Report error: {reportError}
+          </p>
+        )}
         <div className="max-h-[32rem] overflow-auto rounded-md border border-border bg-muted/30 p-5">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}

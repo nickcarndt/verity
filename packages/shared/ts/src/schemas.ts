@@ -107,13 +107,3 @@ export const ReconciliationResult = z.object({
   exceptions: z.array(ExceptionFlag).default([]),
 });
 export type ReconciliationResult = z.infer<typeof ReconciliationResult>;
-
-/** Persisted record of an exception decision or action. */
-export const AuditRecord = z.object({
-  id: z.string(),
-  exception_id: z.string(),
-  timestamp: z.string().datetime(),
-  action: z.string(),
-  notes: z.string().default(""),
-});
-export type AuditRecord = z.infer<typeof AuditRecord>;

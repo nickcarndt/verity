@@ -75,3 +75,14 @@ Open [railway.app/new](https://railway.app/new) → **Deploy from GitHub repo** 
 - [ ] Keyboard nav works (↑↓ Enter Esc)
 - [ ] Eval report shows all scorers passed
 - [ ] Report faithfulness card scores the written report separately
+
+## 5. Prod auth verified (Phase A)
+
+Verified 2026-07-14 against `agent-production-6901.up.railway.app` + `verity-navy-five.vercel.app`:
+
+- [x] Railway agent has `AGENT_API_KEY` + `AGENT_REQUIRE_API_KEY=true`
+- [x] Vercel has matching `AGENT_API_KEY` + `AGENT_API_URL` (server-side)
+- [x] Unauthenticated `POST /reconcile` → **401**
+- [x] Authenticated curl with Bearer → **200** (4 exceptions)
+- [x] Dashboard proxy `/api/reconcile` → **200**
+- [x] `GET /health` → `tracing_enabled: true` when Braintrust key is set

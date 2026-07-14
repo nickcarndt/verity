@@ -39,7 +39,12 @@ def finalize_trace(state: ReconcileState) -> dict[str, list[AgentTraceEvent]]:
             trace_entry(
                 "report_agent",
                 "generate_report",
-                f"Generated cited report for {len(state['exceptions'])} exceptions",
+                (
+                    f"Report generation failed after structured reconcile "
+                    f"({state.get('report_error')})"
+                    if state.get("report_error")
+                    else f"Generated cited report for {len(state['exceptions'])} exceptions"
+                ),
             ),
         ],
     }

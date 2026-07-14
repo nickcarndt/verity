@@ -31,6 +31,13 @@ class ReconcileResponse(BaseModel):
 
     fixture_id: FixtureId
     report: str = Field(..., description="Markdown exception report with clause citations.")
+    report_error: str | None = Field(
+        default=None,
+        description=(
+            "Set when Claude report generation failed after structured reconcile "
+            "succeeded — exceptions remain authoritative."
+        ),
+    )
     exception_count: int
     exceptions: list[ExceptionFlag]
     reconciliation_results: list[ReconciliationResult]

@@ -36,17 +36,25 @@ export async function POST(request: Request) {
       method: "POST",
       headers,
       body: JSON.stringify(parsed.data),
-      signal: AbortSignal.timeout(120_000),
+      // Bound wait: agent Claude timeout (~90s) + MCP + buffer
+      signal: AbortSignal.timeout(150_000),
     });
 
-    const data = await response.json();
+    const data = await response.json().catch(() => ({
+      detail: `Agent at ${agentUrl} returned a non-JSON response`,
+    }));
     return NextResponse.json(data, { status: response.status });
-  } catch {
+  } catch (err) {
+    const timedOut =
+      err instanceof Error &&
+      (err.name === "TimeoutError" || err.name === "AbortError");
     return NextResponse.json(
       {
-        detail: `Agent service unavailable — is it running at ${agentUrl}?`,
+        detail: timedOut
+          ? `Agent request timed out talking to ${agentUrl}`
+          : `Agent service unavailable — is it running at ${agentUrl}?`,
       },
-      { status: 503 },
+      { status: timedOut ? 504 : 503 },
     );
   }
 }

@@ -254,7 +254,7 @@ export function Dashboard() {
             </div>
           </div>
 
-          <ReportView report={result.report} />
+          <ReportView report={result.report} reportError={result.report_error} />
         </>
       )}
 

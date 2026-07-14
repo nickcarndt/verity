@@ -1,5 +1,4 @@
 export {
-  AuditRecord,
   Clause,
   ClauseRef,
   Contract,

@@ -26,6 +26,8 @@ def build_model(settings: Settings) -> ChatAnthropic:
     return ChatAnthropic(
         model=settings.agent_model,
         api_key=settings.anthropic_api_key,
+        timeout=settings.anthropic_timeout_seconds,
+        max_retries=1,
     )
 
 

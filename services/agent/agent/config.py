@@ -55,6 +55,26 @@ class Settings(BaseSettings):
             "(production fail-closed). Local leave false."
         ),
     )
+    mcp_http_timeout_seconds: float = Field(
+        default=30.0,
+        description="HTTP timeout for MCP Streamable HTTP connect/request.",
+    )
+    mcp_sse_read_timeout_seconds: float = Field(
+        default=120.0,
+        description="SSE read timeout for long-running MCP tool calls.",
+    )
+    anthropic_timeout_seconds: float = Field(
+        default=90.0,
+        description="Timeout for Claude report generation calls.",
+    )
+    reconcile_rate_limit: int = Field(
+        default=20,
+        description="Max POST /reconcile requests per IP per rate-limit window.",
+    )
+    reconcile_rate_window_seconds: float = Field(
+        default=60.0,
+        description="Sliding window length for reconcile rate limiting.",
+    )
 
 
 @lru_cache

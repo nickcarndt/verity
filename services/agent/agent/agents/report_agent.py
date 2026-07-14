@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 
 from langchain_core.messages import HumanMessage, SystemMessage
 from langgraph.graph import END, START, StateGraph
@@ -11,6 +12,8 @@ from langgraph.graph.state import CompiledStateGraph
 from agent.agents.common import build_model
 from agent.config import get_settings
 from agent.state import ReconcileState
+
+logger = logging.getLogger(__name__)
 
 _REPORT_SYSTEM = """You are Verity, a clause-grounded invoice-reconciliation reporter.
 
@@ -41,20 +44,44 @@ def _build_report_prompt(state: ReconcileState) -> str:
     return json.dumps(payload, indent=2)
 
 
-async def generate_report(state: ReconcileState) -> dict[str, object]:
-    """Claude: turn structured exceptions into a cited exception report."""
-    settings = get_settings()
-    model = build_model(settings)
-    result = await model.ainvoke(
-        [
-            SystemMessage(content=_REPORT_SYSTEM),
-            HumanMessage(content=_build_report_prompt(state)),
-        ],
+def _fallback_report(state: ReconcileState, error: str) -> str:
+    """Controller-facing stub when Claude fails after structured reconcile."""
+    count = len(state["exceptions"])
+    return (
+        "# Report unavailable\n\n"
+        f"Structured reconciliation completed with **{count}** exception"
+        f"{'' if count == 1 else 's'}, but Claude report generation failed.\n\n"
+        f"_Error:_ `{error}`\n\n"
+        "Exception rows in the dashboard remain authoritative."
     )
-    content = result.content
-    if not isinstance(content, str):
-        content = str(content)
-    return {"report": content}
+
+
+async def generate_report(state: ReconcileState) -> dict[str, object]:
+    """Claude: turn structured exceptions into a cited exception report.
+
+    On Claude/timeout failure, keep structured exceptions and return a stub
+    report plus ``report_error`` so the HTTP handler does not 500.
+    """
+    settings = get_settings()
+    try:
+        model = build_model(settings)
+        result = await model.ainvoke(
+            [
+                SystemMessage(content=_REPORT_SYSTEM),
+                HumanMessage(content=_build_report_prompt(state)),
+            ],
+        )
+        content = result.content
+        if not isinstance(content, str):
+            content = str(content)
+        return {"report": content, "report_error": None}
+    except Exception as exc:
+        logger.exception("Report generation failed; returning structured results only")
+        message = str(exc) or exc.__class__.__name__
+        return {
+            "report": _fallback_report(state, message),
+            "report_error": message,
+        }
 
 
 def build_report_agent() -> CompiledStateGraph:

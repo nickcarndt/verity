@@ -17,4 +17,5 @@ class ReconcileState(TypedDict):
     reconciliation_results: list[ReconciliationResult]
     exceptions: list[ExceptionFlag]
     report: str
+    report_error: str | None
     agent_trace: list[AgentTraceEvent]
