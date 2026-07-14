@@ -24,7 +24,7 @@ export const AgentTraceEventSchema = z.object({
 });
 
 export const ReconcileResponseSchema = z.object({
-  fixture_id: z.string(),
+  fixture_id: z.enum(["nextera-systems", "harbor-analytics"]),
   report: z.string(),
   exception_count: z.number(),
   exceptions: z.array(ExceptionFlagSchema),
@@ -43,7 +43,9 @@ export type ExceptionFlag = z.infer<typeof ExceptionFlagSchema>;
 export type AgentTraceEvent = z.infer<typeof AgentTraceEventSchema>;
 export type ReconcileResponse = z.infer<typeof ReconcileResponseSchema>;
 
-export async function runReconcile(fixtureId: string): Promise<ReconcileResponse> {
+export async function runReconcile(
+  fixtureId: "nextera-systems" | "harbor-analytics",
+): Promise<ReconcileResponse> {
   const response = await fetch("/api/reconcile", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

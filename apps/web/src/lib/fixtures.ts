@@ -2,23 +2,28 @@ import harborContract from "@/data/harbor-analytics/contract.json";
 import harborExpected from "@/data/harbor-analytics/expected_exceptions.json";
 import nexteraContract from "@/data/nextera-systems/contract.json";
 import nexteraExpected from "@/data/nextera-systems/expected_exceptions.json";
-import type { ExceptionFlag } from "@/lib/agent";
+import { ExceptionFlagSchema, type ExceptionFlag } from "@/lib/agent";
+import { z } from "zod";
 
 export type FixtureId = "nextera-systems" | "harbor-analytics";
 
-export type FixtureContract = {
-  id: string;
-  vendor_name: string;
-  title: string;
-  effective_date: string;
-  end_date: string;
-  clauses: Array<{
-    id: string;
-    section: string;
-    title: string;
-    text: string;
-  }>;
-};
+const FixtureContractSchema = z.object({
+  id: z.string(),
+  vendor_name: z.string(),
+  title: z.string(),
+  effective_date: z.string(),
+  end_date: z.string(),
+  clauses: z.array(
+    z.object({
+      id: z.string(),
+      section: z.string(),
+      title: z.string(),
+      text: z.string(),
+    }),
+  ),
+});
+
+export type FixtureContract = z.infer<typeof FixtureContractSchema>;
 
 export type FixtureMeta = {
   id: FixtureId;
@@ -32,29 +37,47 @@ export type FixtureMeta = {
   expectedExceptions: ExceptionFlag[];
 };
 
+function parseFixture(
+  id: FixtureId,
+  meta: Omit<FixtureMeta, "id" | "contract" | "expectedExceptions">,
+  contractJson: unknown,
+  expectedJson: unknown,
+): FixtureMeta {
+  return {
+    id,
+    ...meta,
+    contract: FixtureContractSchema.parse(contractJson),
+    expectedExceptions: z.array(ExceptionFlagSchema).parse(expectedJson),
+  };
+}
+
 export const FIXTURES: Record<FixtureId, FixtureMeta> = {
-  "nextera-systems": {
-    id: "nextera-systems",
-    name: "Nextera Systems",
-    vendorName: "Nextera Systems, Inc.",
-    agreementTitle: "Master SaaS Platform Agreement",
-    description: "5 invoices — 1 clean, 4 labeled exceptions ($10k monthly cap).",
-    invoiceCount: 5,
-    labeledExceptions: 4,
-    contract: nexteraContract as FixtureContract,
-    expectedExceptions: nexteraExpected as ExceptionFlag[],
-  },
-  "harbor-analytics": {
-    id: "harbor-analytics",
-    name: "Harbor Analytics",
-    vendorName: "Harbor Analytics, LLC",
-    agreementTitle: "Managed Analytics Services Agreement",
-    description: "5 invoices — 1 clean, 4 labeled exceptions ($15k monthly cap).",
-    invoiceCount: 5,
-    labeledExceptions: 4,
-    contract: harborContract as FixtureContract,
-    expectedExceptions: harborExpected as ExceptionFlag[],
-  },
+  "nextera-systems": parseFixture(
+    "nextera-systems",
+    {
+      name: "Nextera Systems",
+      vendorName: "Nextera Systems, Inc.",
+      agreementTitle: "Master SaaS Platform Agreement",
+      description: "5 invoices — 1 clean, 4 labeled exceptions ($10k monthly cap).",
+      invoiceCount: 5,
+      labeledExceptions: 4,
+    },
+    nexteraContract,
+    nexteraExpected,
+  ),
+  "harbor-analytics": parseFixture(
+    "harbor-analytics",
+    {
+      name: "Harbor Analytics",
+      vendorName: "Harbor Analytics, LLC",
+      agreementTitle: "Managed Analytics Services Agreement",
+      description: "5 invoices — 1 clean, 4 labeled exceptions ($15k monthly cap).",
+      invoiceCount: 5,
+      labeledExceptions: 4,
+    },
+    harborContract,
+    harborExpected,
+  ),
 };
 
 export const FIXTURE_LIST = Object.values(FIXTURES);

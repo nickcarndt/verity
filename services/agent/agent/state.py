@@ -2,22 +2,19 @@
 
 from typing import TypedDict
 
+from shared.reconciliation import ExceptionFlag, ReconciliationResult
 
-class AgentState(TypedDict):
-    """State for the freeform chat graph (Phase 1)."""
-
-    message: str
-    response: str
+from agent.schemas import AgentTraceEvent
 
 
 class ReconcileState(TypedDict):
-    """State for the multi-agent reconciliation graph."""
+    """State for the reconcile pipeline graph."""
 
     fixture_id: str
     contract_path: str
     invoice_paths: list[str]
     obligations: list[dict[str, object]]
-    reconciliation_results: list[dict[str, object]]
-    exceptions: list[dict[str, object]]
+    reconciliation_results: list[ReconciliationResult]
+    exceptions: list[ExceptionFlag]
     report: str
-    agent_trace: list[dict[str, object]]
+    agent_trace: list[AgentTraceEvent]

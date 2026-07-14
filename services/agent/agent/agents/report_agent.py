@@ -12,7 +12,7 @@ from agent.agents.common import build_model
 from agent.config import get_settings
 from agent.state import ReconcileState
 
-_REPORT_SYSTEM = """You are Verity, an autonomous invoice-reconciliation agent.
+_REPORT_SYSTEM = """You are Verity, a clause-grounded invoice-reconciliation reporter.
 
 You receive structured reconciliation results from MCP tools. Write a concise
 exception report for a financial controller.
@@ -33,8 +33,10 @@ def _build_report_prompt(state: ReconcileState) -> str:
         "contract_path": state["contract_path"],
         "invoice_count": len(state["invoice_paths"]),
         "exception_count": len(state["exceptions"]),
-        "exceptions": state["exceptions"],
-        "reconciliation_results": state["reconciliation_results"],
+        "exceptions": [exc.model_dump(mode="json") for exc in state["exceptions"]],
+        "reconciliation_results": [
+            result.model_dump(mode="json") for result in state["reconciliation_results"]
+        ],
     }
     return json.dumps(payload, indent=2)
 

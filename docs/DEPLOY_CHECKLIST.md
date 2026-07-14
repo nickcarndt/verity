@@ -11,7 +11,7 @@ Quick copy-paste sequence. Full details in [`DEPLOY.md`](./DEPLOY.md).
 
 ## 1. Railway — MCP service
 
-Open [railway.app/new](https://railway.app/new) → **Deploy from GitHub repo** → select `nickcarndt/verity`.
+Open [railway.app/new](https://railway.app/new) → **Deploy from GitHub repo** → select `nickarndt/verity` (or your fork).
 
 - [ ] **New service** → Settings:
   - **Root directory:** leave as repo root (`.`)

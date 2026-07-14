@@ -1,4 +1,4 @@
-# Project: Verity — an autonomous invoice-reconciliation agent that grounds every exception in the source contract clause
+# Project: Verity — clause-grounded invoice reconciliation (deterministic MCP tools + Claude report)
 
 ## How to work with me
 - Act as a senior engineer pair-programming with me and teaching as you go.
@@ -12,9 +12,9 @@
 - Agent orchestration: LangGraph (Python), exposed via FastAPI (HTTP service from day one)
 - Agent deploy target: Railway, Render, or Modal (separate from frontend)
 - MCP server: official Python MCP SDK, Streamable HTTP transport
-- Vector store: Postgres + pgvector
+- Vector store: Postgres + pgvector (future — not used by current product path)
 - Evals + tracing: Braintrust
-- Frontend: Next.js (App Router) + Vercel AI SDK + shadcn/ui + Tailwind
+- Frontend: Next.js (App Router) + shadcn/ui + Tailwind
 - Deploy target: Vercel
 - Language: Python for agent/MCP, TypeScript for frontend
 

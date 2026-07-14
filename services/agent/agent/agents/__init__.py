@@ -1,1 +1,1 @@
-"""Specialist agents for multi-agent reconciliation."""
+"""Specialist stages for the reconcile pipeline."""

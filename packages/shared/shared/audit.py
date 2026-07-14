@@ -1,4 +1,4 @@
-"""Audit trail schemas."""
+"""Audit trail schemas (reserved for future persistence — not used by the current product path)."""
 
 from datetime import datetime
 

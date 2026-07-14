@@ -1,4 +1,4 @@
-"""Supervisor orchestrates specialist agents through the reconcile pipeline."""
+"""Fixed reconcile pipeline: extract → reconcile → report → summarize trace."""
 
 from __future__ import annotations
 
@@ -9,21 +9,17 @@ from agent.agents.common import trace_entry
 from agent.agents.contract_agent import build_contract_agent
 from agent.agents.reconciliation_agent import build_reconciliation_agent
 from agent.agents.report_agent import build_report_agent
+from agent.schemas import AgentTraceEvent
 from agent.state import ReconcileState
 
 
-def finalize_trace(state: ReconcileState) -> dict[str, object]:
-    """Emit a clean multi-agent trace after all specialists complete."""
-    flagged = sum(1 for r in state["reconciliation_results"] if r.get("status") == "flagged")
+def finalize_trace(state: ReconcileState) -> dict[str, list[AgentTraceEvent]]:
+    """Summarize specialist steps after the pipeline completes."""
+    flagged = sum(1 for r in state["reconciliation_results"] if r.status == "flagged")
     matched = len(state["reconciliation_results"]) - flagged
 
     return {
         "agent_trace": [
-            trace_entry(
-                "supervisor",
-                "plan",
-                "Routed contract_agent → reconciliation_agent → report_agent",
-            ),
             trace_entry(
                 "contract_agent",
                 "extract_obligations",
@@ -49,14 +45,14 @@ def finalize_trace(state: ReconcileState) -> dict[str, object]:
     }
 
 
-def build_supervisor_graph() -> CompiledStateGraph:
-    """Build the multi-agent reconcile graph with three specialist subgraphs.
+def build_reconcile_pipeline() -> CompiledStateGraph:
+    """Build the fixed specialist pipeline for reconciliation.
 
     Flow:
       contract_agent → reconciliation_agent → report_agent → finalize_trace
 
     Each specialist is a compiled LangGraph subgraph — visible as nested spans
-    in Braintrust traces.
+    in Braintrust traces. Routing is fixed (not LLM-decided).
     """
     graph = StateGraph(ReconcileState)
     graph.add_node("contract_agent", build_contract_agent())
@@ -69,4 +65,8 @@ def build_supervisor_graph() -> CompiledStateGraph:
     graph.add_edge("reconciliation_agent", "report_agent")
     graph.add_edge("report_agent", "finalize_trace")
     graph.add_edge("finalize_trace", END)
-    return graph.compile(name="verity_supervisor")
+    return graph.compile(name="verity_reconcile_pipeline")
+
+
+# Back-compat alias for any external imports.
+build_supervisor_graph = build_reconcile_pipeline

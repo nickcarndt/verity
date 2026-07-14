@@ -27,10 +27,13 @@ async def main() -> None:
         },
     )
 
-    found_ids = {exc["invoice_id"] for exc in result["exceptions"]}
+    found_ids = {
+        exc.invoice_id if hasattr(exc, "invoice_id") else exc["invoice_id"]
+        for exc in result["exceptions"]
+    }
     assert found_ids == expected_ids
     assert len(result["report"]) > 100
-    assert len(result["agent_trace"]) == 4
+    assert len(result["agent_trace"]) == 3
     print(
         "OK: exceptions =",
         len(result["exceptions"]),

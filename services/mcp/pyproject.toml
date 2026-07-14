@@ -6,6 +6,7 @@ requires-python = ">=3.11"
 dependencies = [
     "mcp>=1.28.0",
     "pydantic>=2.0",
+    "pydantic-settings>=2.0",
     "verity-shared @ file:../../packages/shared",
 ]
 

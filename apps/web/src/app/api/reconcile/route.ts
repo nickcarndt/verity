@@ -2,11 +2,12 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 const RequestSchema = z.object({
-  fixture_id: z.string().min(1),
+  fixture_id: z.enum(["nextera-systems", "harbor-analytics"]),
 });
 
 export async function POST(request: Request) {
   const agentUrl = process.env.AGENT_API_URL ?? "http://localhost:8000";
+  const agentApiKey = process.env.AGENT_API_KEY;
 
   let body: unknown;
   try {
@@ -17,21 +18,34 @@ export async function POST(request: Request) {
 
   const parsed = RequestSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ detail: "fixture_id is required" }, { status: 400 });
+    return NextResponse.json(
+      { detail: "fixture_id must be nextera-systems or harbor-analytics" },
+      { status: 400 },
+    );
+  }
+
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (agentApiKey) {
+    headers.Authorization = `Bearer ${agentApiKey}`;
   }
 
   try {
     const response = await fetch(`${agentUrl}/reconcile`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify(parsed.data),
+      signal: AbortSignal.timeout(120_000),
     });
 
     const data = await response.json();
     return NextResponse.json(data, { status: response.status });
   } catch {
     return NextResponse.json(
-      { detail: "Agent service unavailable — is it running on port 8000?" },
+      {
+        detail: `Agent service unavailable — is it running at ${agentUrl}?`,
+      },
       { status: 503 },
     );
   }

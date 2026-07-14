@@ -54,7 +54,7 @@ export function ExceptionDrawer({
 
           <section>
             <h4 className="mb-2 text-xs font-medium uppercase tracking-wide text-subtle">
-              Agent reasoning
+              Pipeline steps
             </h4>
             <div className="rounded-md border border-border bg-card p-4">
               <AgentTraceTimeline

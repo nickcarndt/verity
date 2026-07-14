@@ -5,10 +5,9 @@ import type { AgentTraceEvent } from "@/lib/agent";
 import { cn } from "@/lib/utils";
 
 const AGENT_LABELS: Record<string, string> = {
-  supervisor: "Supervisor",
-  contract_agent: "Contract agent",
-  reconciliation_agent: "Reconciliation agent",
-  report_agent: "Report agent",
+  contract_agent: "Contract stage",
+  reconciliation_agent: "Reconciliation stage",
+  report_agent: "Report stage",
 };
 
 interface AgentTraceTimelineProps {

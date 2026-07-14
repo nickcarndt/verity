@@ -46,6 +46,7 @@ export function SeverityBadge({ severity }: SeverityBadgeProps) {
 interface ExceptionTableProps {
   exceptions: ExceptionFlag[];
   vendorName?: string;
+  invoiceCount?: number;
   focusedId: string | null;
   drawerOpen: boolean;
   keyboardEnabled?: boolean;
@@ -65,6 +66,7 @@ function SortIcon({ sorted }: { sorted: false | "asc" | "desc" }) {
 export function ExceptionTable({
   exceptions,
   vendorName = "Nextera Systems, Inc.",
+  invoiceCount,
   focusedId,
   drawerOpen,
   keyboardEnabled = true,
@@ -153,12 +155,6 @@ export function ExceptionTable({
           </button>
         ),
       },
-      {
-        id: "status",
-        header: "Status",
-        enableSorting: false,
-        cell: () => <Badge variant="warning">Flagged</Badge>,
-      },
     ],
     [vendorName, highlightedSection, onClauseClick],
   );
@@ -205,7 +201,9 @@ export function ExceptionTable({
       <div className="rounded-md border border-dashed border-border bg-success-bg px-6 py-14 text-center">
         <p className="text-sm font-medium text-success">No exceptions found</p>
         <p className="mt-1 text-sm text-muted-foreground">
-          All 5 invoices reconciled cleanly against contract obligations.
+          {invoiceCount != null
+            ? `All ${invoiceCount} invoices reconciled cleanly against contract obligations.`
+            : "All invoices reconciled cleanly against contract obligations."}
         </p>
       </div>
     );

@@ -42,9 +42,7 @@ Added `POST /reconcile` returning structured exceptions plus a markdown report. 
 
 Wired Braintrust tracing into the agent service:
 
-- Top-level spans on `/reconcile` and `/invoke`
-- LangGraph + Claude spans via `BraintrustCallbackHandler`
-- MCP tool spans via `@traced(name="mcp.<tool>")`
+- Top-level spans on `/reconcile` (later: Braintrust auto-instrumentation)
 - Graceful no-op when `BRAINTRUST_API_KEY` is unset (local dev without an account)
 
 Added deployment skeleton: Dockerfiles for agent + MCP (monorepo-aware, bundles fixtures), Railway configs, and `docs/DEPLOY.md`. Two-service deploy order: MCP first, then agent with `MCP_SERVER_URL` pointing at it.
@@ -61,26 +59,21 @@ Built `/apps/web` — Next.js App Router dashboard calling the agent over HTTP v
 
 UI includes exception table with severity badges, dollar-impact summary cards, clickable clause citation drawer, loading/empty/error states, and the Claude markdown report. Uses shared Zod schemas for response validation.
 
-## Day 8 — Streaming chat + pipeline trace
+## Day 8 — Pipeline trace drawer
 
-Added streaming chat via Vercel AI SDK (`useCompletion` + text stream protocol):
+Added pipeline trace drawer — shows LangGraph stage execution (extract → reconcile → report) and per-invoice status after a reconciliation run.
 
-- Agent `POST /invoke/stream` — Claude tokens via `model.astream`
-- Next.js `/api/chat` proxies to agent
-- Sidebar chat panel on the dashboard
+*(Streaming sidebar chat was added here historically, then removed — ungrounded chat contradicted the product positioning.)*
 
-Added pipeline trace drawer — shows LangGraph node execution (setup → extract → reconcile → report) and per-invoice status after a reconciliation run. Links to Braintrust for full traces when configured.
+## Day 9 — Specialist pipeline split
 
-## Day 9 — Multi-agent split
+Split the linear reconcile graph into three specialist subgraphs in a **fixed** pipeline:
 
-Split the linear reconcile graph into a supervisor + three specialist subgraphs:
+- **Contract stage** — fixture setup + obligation extraction (MCP)
+- **Reconciliation stage** — invoice parse + reconcile (MCP)
+- **Report stage** — Claude cited exception report
 
-- **Supervisor** — routes `contract_agent → reconciliation_agent → report_agent`
-- **Contract agent** — fixture setup + obligation extraction (MCP)
-- **Reconciliation agent** — invoice parse + reconcile (MCP)
-- **Report agent** — Claude cited exception report
-
-Each specialist is a compiled LangGraph subgraph (nested spans in Braintrust). `agent_trace` in state feeds the frontend multi-agent trace drawer.
+Each specialist is a compiled LangGraph subgraph (nested spans in Braintrust). `agent_trace` in state feeds the frontend pipeline trace drawer. There is no LLM router — edges are fixed.
 
 ## Day 10 — Citations polish + eval report UI
 
@@ -146,3 +139,12 @@ Dashboard fixture switcher for Nextera Systems and Harbor Analytics:
 - Segmented control in dashboard header — switching fixtures clears prior run state
 - Contract panel, eval report, and exception drawer load per-fixture contract + labels
 - `/api/eval` and `/api/contract` accept `fixture_id`
+
+## Day 17 — Honesty pass (pipeline naming + chat removal)
+
+Portfolio audit cleanup:
+
+- Removed ungrounded Agent Chat UI + `/api/chat` + agent `/invoke` endpoints
+- Renamed supervisor framing → fixed `build_reconcile_pipeline` (no fabricated plan span)
+- Docs/README/SPEC aligned: deterministic tools + Claude report; pgvector marked future
+- Braintrust UI is a non-link “traced” badge (permalinks aren’t publicly readable)

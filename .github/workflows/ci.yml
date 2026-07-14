@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python:
+    name: MCP verify + local evals
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ./packages/shared
+          pip install "mcp>=1.28.0" "pydantic>=2.0" "pydantic-settings>=2.0" "braintrust>=0.5.0"
+          pip install --no-deps -e ./services/mcp
+          pip install --no-deps -e ./packages/evals
+
+      - name: Verify MCP tools
+        run: python services/mcp/scripts/verify_tools.py
+
+      - name: Run local evals
+        run: python packages/evals/scripts/run_local.py
+
+  web:
+    name: Web typecheck + build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Build
+        run: npm run build
+        env:
+          AGENT_API_URL: http://localhost:8000

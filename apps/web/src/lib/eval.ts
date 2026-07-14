@@ -1,5 +1,8 @@
 import type { ExceptionFlag } from "@/lib/agent";
 
+// TypeScript port of packages/evals/evals/scorers.py for in-dashboard scoring.
+// Python evals (packages/evals) are the CI source of truth — keep scorers in sync manually.
+
 export type EvalScore = {
   name: string;
   label: string;

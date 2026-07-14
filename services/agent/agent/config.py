@@ -41,6 +41,13 @@ class Settings(BaseSettings):
         default="verity",
         description="Braintrust project name for traces and evals.",
     )
+    agent_api_key: str | None = Field(
+        default=None,
+        description=(
+            "Optional shared secret for POST /reconcile. "
+            "When set, callers must send Authorization: Bearer <key>."
+        ),
+    )
 
 
 @lru_cache

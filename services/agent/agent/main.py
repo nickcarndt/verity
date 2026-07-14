@@ -1,25 +1,18 @@
 """FastAPI application — HTTP wrapper around the LangGraph agent."""
 
-import braintrust
-
-braintrust.auto_instrument()
-braintrust.init_logger(project="Verity")
-
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi import Depends, FastAPI, HTTPException
 
+from agent.auth import require_agent_api_key
 from agent.config import get_settings
-from agent.graph import compiled_graph, compiled_reconcile_graph
+from agent.graph import compiled_reconcile_graph
+from agent.mcp_client import McpClient
 from agent.schemas import (
     HealthResponse,
-    InvokeRequest,
-    InvokeResponse,
     ReconcileRequest,
     ReconcileResponse,
 )
-from agent.streaming import stream_chat_response
 from agent.tracing import (
     langchain_config,
     mark_tracing_ready,
@@ -27,6 +20,13 @@ from agent.tracing import (
     trace_run,
     tracing_enabled,
 )
+
+_settings = get_settings()
+
+import braintrust
+
+braintrust.auto_instrument()
+braintrust.init_logger(project=_settings.braintrust_project)
 
 mark_tracing_ready()
 
@@ -38,7 +38,7 @@ async def lifespan(_app: FastAPI):
 
 app = FastAPI(
     title="Verity Agent",
-    description="LangGraph invoice-reconciliation agent",
+    description="LangGraph invoice-reconciliation pipeline",
     version="0.3.0",
     lifespan=lifespan,
 )
@@ -54,42 +54,11 @@ async def health() -> HealthResponse:
     )
 
 
-@app.post("/invoke", response_model=InvokeResponse)
-async def invoke(request: InvokeRequest) -> InvokeResponse:
-    """Run the freeform chat graph on a message and return Claude's response."""
-    settings = get_settings()
-    if not settings.anthropic_api_key:
-        raise HTTPException(
-            status_code=503,
-            detail="ANTHROPIC_API_KEY is not configured",
-        )
-
-    async with trace_run("invoke", input={"message": request.message}):
-        result = await compiled_graph.ainvoke(
-            {"message": request.message, "response": ""},
-            config=langchain_config(),
-        )
-    return InvokeResponse(response=result["response"])
-
-
-@app.post("/invoke/stream")
-async def invoke_stream(request: InvokeRequest) -> StreamingResponse:
-    """Stream Claude's reply as plain text for the Vercel AI SDK text protocol."""
-    settings = get_settings()
-    if not settings.anthropic_api_key:
-        raise HTTPException(
-            status_code=503,
-            detail="ANTHROPIC_API_KEY is not configured",
-        )
-
-    return StreamingResponse(
-        stream_chat_response(request.message),
-        media_type="text/plain; charset=utf-8",
-    )
-
-
 @app.post("/reconcile", response_model=ReconcileResponse)
-async def reconcile(request: ReconcileRequest) -> ReconcileResponse:
+async def reconcile(
+    request: ReconcileRequest,
+    _: None = Depends(require_agent_api_key),
+) -> ReconcileResponse:
     """Run MCP tools end-to-end on a fixture and return a cited exception report."""
     settings = get_settings()
     if not settings.anthropic_api_key:
@@ -99,33 +68,39 @@ async def reconcile(request: ReconcileRequest) -> ReconcileResponse:
         )
 
     trace_url: str | None = None
+    mcp = McpClient(settings.mcp_server_url)
     try:
-        async with trace_run(
-            "reconcile",
-            input={"fixture_id": request.fixture_id},
-            metadata={"fixture_id": request.fixture_id},
-        ) as span:
-            result = await compiled_reconcile_graph.ainvoke(
-                {
-                    "fixture_id": request.fixture_id,
-                    "contract_path": "",
-                    "invoice_paths": [],
-                    "obligations": [],
-                    "reconciliation_results": [],
-                    "exceptions": [],
-                    "report": "",
-                    "agent_trace": [],
-                },
-                config=langchain_config(metadata={"fixture_id": request.fixture_id}),
-            )
-            if span is not None:
-                span.log(
-                    output={
-                        "exception_count": len(result["exceptions"]),
-                        "report_preview": result["report"][:500],
-                    },
-                )
-                trace_url = span_permalink(span)
+        async with mcp:
+            mcp.bind_to_run()
+            try:
+                async with trace_run(
+                    "reconcile",
+                    input={"fixture_id": request.fixture_id},
+                    metadata={"fixture_id": request.fixture_id},
+                ) as span:
+                    result = await compiled_reconcile_graph.ainvoke(
+                        {
+                            "fixture_id": request.fixture_id,
+                            "contract_path": "",
+                            "invoice_paths": [],
+                            "obligations": [],
+                            "reconciliation_results": [],
+                            "exceptions": [],
+                            "report": "",
+                            "agent_trace": [],
+                        },
+                        config=langchain_config(metadata={"fixture_id": request.fixture_id}),
+                    )
+                    if span is not None:
+                        span.log(
+                            output={
+                                "exception_count": len(result["exceptions"]),
+                                "report_preview": result["report"][:500],
+                            },
+                        )
+                        trace_url = span_permalink(span)
+            finally:
+                mcp.unbind_from_run()
     except RuntimeError as exc:
         raise HTTPException(
             status_code=503,

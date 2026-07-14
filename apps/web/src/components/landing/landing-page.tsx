@@ -66,14 +66,15 @@ export function LandingPage() {
           <div className="relative mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-2 lg:items-center lg:py-28">
             <div>
               <p className="text-xs font-medium uppercase tracking-wide text-subtle">
-                Autonomous invoice reconciliation
+                Clause-grounded invoice reconciliation
               </p>
               <h1 className="mt-3 text-4xl font-semibold tracking-[-0.03em] text-foreground sm:text-5xl">
                 Every billing exception, grounded in the contract clause.
               </h1>
               <p className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">
-                Verity ingests vendor agreements and invoice batches, reconciles them through a
-                multi-agent pipeline, and surfaces cited exceptions a controller can act on.
+                Verity reconciles vendor agreements against invoice batches with deterministic
+                tools, then asks Claude only to write the cited exception report a controller
+                can act on.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link href="/app">
@@ -90,9 +91,8 @@ export function LandingPage() {
               </div>
             </div>
 
-            {/* Hero visual slot — replace with Higgsfield cinematic asset */}
             <div className="relative hidden lg:block">
-              <div className="rounded-lg border border-border bg-card p-6 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+              <div className="rounded-lg border border-border bg-card p-6 pb-7 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
                 <p className="mb-4 text-xs font-medium uppercase tracking-wide text-subtle">
                   Exception queue · Nextera Systems
                 </p>
@@ -118,9 +118,6 @@ export function LandingPage() {
                     </div>
                   ))}
                 </div>
-                <p className="mt-4 text-xs text-subtle">
-                  Hero visual slot — drop Higgsfield cinematic asset here
-                </p>
               </div>
             </div>
           </div>
@@ -156,7 +153,7 @@ export function LandingPage() {
           <div className="mx-auto max-w-6xl px-6 py-20">
             <h2 className="text-2xl font-semibold tracking-[-0.02em]">How it works</h2>
             <p className="mt-2 max-w-xl text-muted-foreground">
-              Three specialist agents, one supervisor — deterministic MCP tools for reconciliation,
+              A fixed three-stage pipeline — deterministic MCP tools for reconciliation,
               Claude only for the cited report.
             </p>
             <ol className="mt-12 grid gap-6 md:grid-cols-3">
@@ -184,16 +181,16 @@ export function LandingPage() {
               Built for production AI engineering
             </h2>
             <p className="mt-2 max-w-2xl text-muted-foreground">
-              LangGraph multi-agent orchestration, custom MCP tools, Braintrust tracing and evals,
+              LangGraph pipeline orchestration, custom MCP tools, Braintrust tracing and evals,
               and a premium fintech dashboard — not a wrapper around a chat box.
             </p>
             <div className="mt-10 grid gap-4 sm:grid-cols-3">
               <div className="rounded-md border border-border bg-card p-5">
                 <GitBranch className="h-5 w-5 text-primary" />
-                <h3 className="mt-3 text-sm font-semibold">Multi-agent graph</h3>
+                <h3 className="mt-3 text-sm font-semibold">LangGraph pipeline</h3>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Supervisor routes contract, reconciliation, and report specialists as compiled
-                  LangGraph subgraphs.
+                  Fixed extract → reconcile → report stages as compiled LangGraph subgraphs,
+                  traced end to end.
                 </p>
               </div>
               <div className="rounded-md border border-border bg-card p-5">
@@ -209,7 +206,7 @@ export function LandingPage() {
                 <h3 className="mt-3 text-sm font-semibold">Evals + tracing</h3>
                 <p className="mt-1 text-sm text-muted-foreground">
                   Four deterministic scorers against labeled fixtures. Every run traced in
-                  Braintrust with deep links from the dashboard.
+                  Braintrust for span-level debugging and offline eval.
                 </p>
               </div>
             </div>

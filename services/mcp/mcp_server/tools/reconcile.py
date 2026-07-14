@@ -29,7 +29,7 @@ def reconcile_invoice(
                 impact = invoice.total_amount - obligation.max_amount
                 exceptions.append(
                     ExceptionFlag(
-                        id=f"exc-overbilling-{invoice.id}",
+                        id=f"exc-overbilling-{invoice.id}-{obligation.id}",
                         type=ExceptionType.OVERBILLING,
                         severity=Severity.HIGH,
                         description=(
@@ -51,7 +51,7 @@ def reconcile_invoice(
             if not invoice.po_number:
                 exceptions.append(
                     ExceptionFlag(
-                        id=f"exc-missing-po-{invoice.id}",
+                        id=f"exc-missing-po-{invoice.id}-{obligation.id}",
                         type=ExceptionType.MISSING_PO,
                         severity=Severity.MEDIUM,
                         description="Invoice submitted without a purchase order reference.",
@@ -72,7 +72,7 @@ def reconcile_invoice(
             if out_of_term:
                 exceptions.append(
                     ExceptionFlag(
-                        id=f"exc-out-of-term-{invoice.id}",
+                        id=f"exc-out-of-term-{invoice.id}-{obligation.id}",
                         type=ExceptionType.OUT_OF_TERM,
                         severity=Severity.CRITICAL,
                         description="Invoice date falls outside the contract term.",
@@ -90,7 +90,7 @@ def reconcile_invoice(
             if invoice.invoice_number in known:
                 exceptions.append(
                     ExceptionFlag(
-                        id=f"exc-duplicate-{invoice.id}",
+                        id=f"exc-duplicate-{invoice.id}-{obligation.id}",
                         type=ExceptionType.DUPLICATE_INVOICE,
                         severity=Severity.HIGH,
                         description=(

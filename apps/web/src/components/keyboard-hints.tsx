@@ -9,7 +9,7 @@ export function KeyboardHints({ className }: KeyboardHintsProps) {
     <p className={cn("text-xs text-subtle", className)}>
       <Kbd>↑</Kbd> <Kbd>↓</Kbd> navigate
       <span className="mx-2 text-border">·</span>
-      <Kbd>Enter</Kbd> open trace
+      <Kbd>Enter</Kbd> open exception
       <span className="mx-2 text-border">·</span>
       <Kbd>Esc</Kbd> close
     </p>

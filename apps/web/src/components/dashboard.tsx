@@ -108,7 +108,7 @@ export function Dashboard() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-12">
+    <div className="mx-auto flex w-full flex-col gap-12">
       <section className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="space-y-3">
           <MetaLabel>Fixture</MetaLabel>
@@ -128,7 +128,7 @@ export function Dashboard() {
           {result && (
             <Button variant="outline" onClick={() => setTraceOpen(true)}>
               <GitBranch className="h-4 w-4" />
-              View pipeline
+              How this run worked
             </Button>
           )}
           <Button onClick={handleReconcile} disabled={loading} size="lg">
@@ -219,11 +219,12 @@ export function Dashboard() {
           <section className="space-y-4">
             <SectionHeading
               title="Exception queue"
-              description="Inspect agent reasoning, evidence, and clause grounding for each flag."
+              description="Inspect evidence and clause grounding for each flag."
             />
             <ExceptionTable
               exceptions={result.exceptions}
               vendorName={fixture.vendorName}
+              invoiceCount={fixture.invoiceCount}
               focusedId={focused?.id ?? null}
               drawerOpen={drawerOpen}
               keyboardEnabled={!traceOpen}

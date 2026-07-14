@@ -6,17 +6,20 @@ from collections.abc import AsyncIterator, Mapping
 from contextlib import asynccontextmanager
 from typing import Any
 
+from agent.config import get_settings
+
 _enabled = False
 
 
 def mark_tracing_ready() -> None:
-    """Record that Braintrust auto-instrumentation bootstrap completed."""
+    """Enable tracing export only when a Braintrust API key is configured."""
     global _enabled
-    _enabled = True
+    settings = get_settings()
+    _enabled = bool(settings.braintrust_api_key)
 
 
 def tracing_enabled() -> bool:
-    """Return whether Braintrust tracing bootstrap ran."""
+    """Return whether Braintrust will export traces for this process."""
     return _enabled
 
 

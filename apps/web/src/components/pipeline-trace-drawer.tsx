@@ -32,24 +32,14 @@ export function PipelineTraceDrawer({
         <SheetHeader>
           <div className="flex items-center gap-2 pr-8">
             <GitBranch className="h-4 w-4 text-subtle" />
-            <SheetTitle>Multi-agent trace</SheetTitle>
+            <SheetTitle>How this run worked</SheetTitle>
           </div>
           <SheetDescription>
-            Supervisor-routed specialist execution for this run.
+            Fixed pipeline stages for this reconciliation run.
           </SheetDescription>
         </SheetHeader>
 
         <SheetBody className="space-y-8">
-          <section className="rounded-md border border-border bg-muted/30 p-4">
-            <h4 className="mb-2 text-xs font-medium uppercase tracking-wide text-subtle">
-              Braintrust trace
-            </h4>
-            <p className="mb-3 text-sm text-muted-foreground">
-              Full nested spans — LangGraph nodes, Claude calls, and MCP tool invocations.
-            </p>
-            <BraintrustTraceLink url={result.braintrust_trace_url} />
-          </section>
-
           <AgentTraceTimeline events={result.agent_trace ?? []} />
 
           <section>
@@ -74,10 +64,17 @@ export function PipelineTraceDrawer({
             </ul>
           </section>
 
-          <p className="text-xs text-muted-foreground">
-            The in-app trace above is a summary. Open Braintrust for full span hierarchy and
-            eval experiment history.
-          </p>
+          <section className="rounded-md border border-border bg-muted/30 p-4">
+            <h4 className="mb-2 text-xs font-medium uppercase tracking-wide text-subtle">
+              Braintrust tracing
+            </h4>
+            <p className="mb-3 text-sm text-muted-foreground">
+              Every reconciliation run is traced in Braintrust — nested LangGraph
+              spans, Claude calls, and MCP tool invocations for offline eval and
+              debugging.
+            </p>
+            <BraintrustTraceLink url={result.braintrust_trace_url} />
+          </section>
         </SheetBody>
       </SheetContent>
     </Sheet>
